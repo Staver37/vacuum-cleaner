@@ -1,14 +1,13 @@
 from tkinter import LEFT, RIGHT
 import turtle as tt
 
-
 UP    = 0
 RIGHT = 1
 DOWN  = 2
 LEFT  = 3
 class Enviroment:
     #
-    def __init__(self, room_size = (10,10), robo_coords = (5,5),robo_dir =UP):
+    def __init__(self, room_size = (10,10), robo_coords = (1,1),robo_dir =LEFT):
 
         self.room_size = room_size
 
@@ -29,7 +28,7 @@ class Enviroment:
         screen.setup()
         screen.setup(self.room_size[0] * self.scale, self.room_size[1]* self.scale)
 
-#       vertical grid lines
+    # vertical grid lines
         tt.tracer(0,0)
         tt.right(90)
         for x in range(self.room_size[0]):
@@ -42,7 +41,7 @@ class Enviroment:
         tt.goto(self.coordsToPixels((0,0)))
         tt.left(90)
  
- #       horizontal grid lines
+         #horizontal grid lines
 
         for y in range(self.room_size[1]):
             tt.penup()
@@ -62,7 +61,11 @@ class Enviroment:
         tt.end_fill()
 
         if self.robo_dir ==  DOWN:
-            tt.left(0)
+            tt.left(90)
+            tt.forward(10)
+            tt.right(90)
+            tt.forward(10)
+            tt.left(90)
 
         if self.robo_dir ==  UP:
             tt.penup()
@@ -90,7 +93,9 @@ class Enviroment:
             tt.pendown()
 
 
-#       small circle
+
+        
+        # small circle
         tt.fillcolor('green')
         tt.begin_fill()
         tt.circle(10)
