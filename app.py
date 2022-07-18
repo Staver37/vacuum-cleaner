@@ -6,7 +6,13 @@ env = Enviroment()
 ag = Agent()
 
 
-for i in range (10000):
+for i in range (100):
     env.render()
-    env.step( ag.selectAction() )
+    print("Last state", ag.last_state, end=" <> ")
+    state = env.step( ag.selectAction() )
+    ag.rememberState(state)
     sleep(0.5)
+    print("Curent state:",state)
+    
+    
+    

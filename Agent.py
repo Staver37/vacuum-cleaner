@@ -8,8 +8,11 @@ from random import randint
 class Agent:
     
     def __init__(self):
-        pass
+        self.last_state = None # short memory
 
     # THIS IS MAIN AGENT LOGIC
     def selectAction(self):
-        return randint(0,3)
+        return randint (0,5)
+
+    def rememberState(self,state):
+        self.last_state = state

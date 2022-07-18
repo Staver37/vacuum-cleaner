@@ -10,24 +10,34 @@ DIR_LEFT  = 3
 WALL = -1
 EMPTY = 0
 
-#
-#  ^
-#< R >
-#  v
-#
+#  ^ 
+#< R > 
+#  v 
+# 
+# 
+
+# penalties
+PEN_OUTSIDE = -2
+PEN_WALL    = -1
+PEN_TURN  = -0.5
+PEN_WALK    = 0
+
 
 class Enviroment:
 #                                    x|y        /          x|y      /     dir 
-    def __init__(self, room_size = (14,14), robo_coords = [7,7],robo_dir = DIR_RIGHT):
+    def __init__(self, room_size = (10,10), robo_coords = [5,5],robo_dir = DIR_DOWN):
 
         self.room_size = room_size
         self.room_sectors = [
             [
                 EMPTY for x in range(self.room_size[0])
-                for y in range(self.room_size[1])
-            ]
+            ]   for y in range(self.room_size[1])
+            
         ]
-        self.room_sectors[0][0] = WALL
+        self.room_sectors[7][5] = WALL
+        self.room_sectors[7][6] = WALL
+        self.room_sectors[7][7] = WALL
+        
 
         self.robo_coords = robo_coords
         self.robo_dir = robo_dir
@@ -51,13 +61,12 @@ class Enviroment:
         
         for y in range (self.room_size[1]):
             for x in range (self.room_size[0]):
-                
                 draw.penup()
                 draw.goto(self.coordsToPixels((x,y)))
                 draw.pendown()
                 color = 'white'
-                #if self.room_sectors[y][x] == WALL:
-                #    color = 'gray'
+                if self.room_sectors[y][x] == WALL:
+                    color = 'gray'
 
                 draw.fillcolor(color)
                 draw.begin_fill()
@@ -133,29 +142,92 @@ class Enviroment:
         #tt.done()
         #input()
     
+
+
+
+    def actDir(self):
+        if self.robo_dir == DIR_UP:
+            self.robo_coords[1] -= 1    
+        if self.robo_dir == DIR_RIGHT:
+            self.robo_coords[0] += 1
+        if self.robo_dir == DIR_DOWN:
+            self.robo_coords[1] += 1
+        if self.robo_dir == DIR_LEFT:
+            self.robo_coords[0] -= 1
+    
+    
     def step(self,action):
+        pen = PEN_WALK
         if action == ACT_RIGHT:
             self.robo_dir += 1
             if self.robo_dir > 3:
                 self.robo_dir = 0
+    
         
-        # HW 4 finish the logic of turn left
-        # HW5: FINISH THE MOVEMENT LOGIC
+        # HW 6 * : try to optimize this code 
+        #   hint : try to set a sign variable 
+        #   hint : try to use dict or list with predefinited directrion
+
+
+
         if action == ACT_FRONT:
-            self.robo_dir = DIR_RIGHT
-            self.robo_coords[0] += 1
+            self.actDir()
 
         if action == ACT_BACK:
-            self.robo_dir = DIR_LEFT
-            self.robo_coords[0] -= 1
-
+            self.actDir()
+        
         if action == ACT_LEFT:
-            self.robo_dir = DIR_UP
-            self.robo_coords[1] -= 1
-
+            self.actDir()    
+        
         if action == ACT_RIGHT:
-            self.robo_dir = DIR_DOWN
-            self.robo_coords[1] += 1
-
+            self.actDir()
 
         
+
+        # if action == ACT_FRONT:
+        #     self.robo_dir = DIR_RIGHT
+        #     self.robo_coords[0] += 1
+
+        # if action == ACT_BACK:
+        #     self.robo_dir = DIR_LEFT
+        #     self.robo_coords[0] -= 1
+
+        # if action == ACT_LEFT:
+        #     self.robo_dir = DIR_UP
+        #     self.robo_coords[1] -= 1
+
+        # if action == ACT_RIGHT:
+        #     self.robo_dir = DIR_DOWN
+        #     self.robo_coords[1] += 1
+        
+
+        
+        if self.robo_coords[0] >= self.room_size [0] or\
+           self.robo_coords[1] >= self.room_size [1] or\
+           self.robo_coords[0]< 0 or\
+           self.robo_coords[1] < 0:
+               pen = PEN_OUTSIDE
+        
+        elif self.room_sectors[self.robo_coords[1]][self.robo_coords[0]] == WALL:
+            pen = PEN_WALL
+
+        state = [
+            self.robo_coords,
+            self.robo_dir,
+            pen
+        ]
+
+
+        return state
+
+        
+
+
+
+
+
+
+
+
+
+
