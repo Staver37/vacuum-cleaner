@@ -26,11 +26,11 @@ class Agent:
             
             state = env.step(ACTIONS[act], self, simulate = True)
             penalties[act] = state[2]
-            print(" +",act, penalties[act] )
+            #print(" +",act, penalties[act] )
 
 
         best_pelnaty = max(penalties)
-        print("Penalties 1:>>> ", penalties, best_pelnaty)
+        #print("Penalties 1:>>> ", penalties, best_pelnaty)
         selected_action = penalties.index(best_pelnaty)
         return ACTIONS[selected_action]
 
